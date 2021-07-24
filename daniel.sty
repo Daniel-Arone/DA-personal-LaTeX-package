@@ -1,0 +1,147 @@
+\NeedsTeXFormat{LaTeX2e}
+\ProvidesPackage{daniel}[2021/01/01 Own personal macros]
+
+%Needed packages
+\RequirePackage{xcolor}
+\RequirePackage{tikz}
+%\RequirePackage{hyperref}
+
+%Colors
+\definecolor{ProofPurple}{RGB}{99,0,99}
+\definecolor{RemarkBorder}{RGB}{0,0,0}
+\definecolor{RemarkBg}{RGB}{210,230,255}
+\definecolor{TheoremBorder}{RGB}{105,5,5}
+\definecolor{TheoremBg}{RGB}{255,192,192}
+\definecolor{CorollaryBorder}{RGB}{5,105,5}
+\definecolor{CorollaryBg}{RGB}{192,255,192}
+\definecolor{LemmaBorder}{RGB}{5,5,105}
+\definecolor{LemmaBg}{RGB}{192,192,255}
+\definecolor{DefinitionBorder}{RGB}{104,5,54}
+\definecolor{DefinitionBg}{RGB}{240,231,216}
+
+%Word variables for multiple languages
+\newcommand{\theoremterm}{Theorem}
+\newcommand{\lemmaterm}{Lemma}
+\newcommand{\corollaryterm}{Corollary}
+\newcommand{\proofterm}{Proof}
+\newcommand{\definitionterm}{Definition}
+\newcommand{\remarkterm}{Remark}
+
+%Language options
+\DeclareOption{fin}
+	{
+	\renewcommand{\theoremterm}{Lause}
+	\renewcommand{\corollaryterm}{Korollaari}
+	\renewcommand{\proofterm}{Todistus}
+	\renewcommand{\definitionterm}{Määritelmä}
+	\renewcommand{\remarkterm}{Huomautus}
+	}
+\DeclareOption*{\PackageWarning{daniel}{Unknown '\CurrentOption'}}
+\ProcessOptions\relax
+
+%Counters
+\newcounter{theorem}[section]
+
+%Basic shortcuts
+\def\mbb#1{\mathbb{#1}}
+\def\mfk#1{\mathfrak{#1}}
+
+\def\bN{\mbb{N}}
+\def\bC{\mbb{C}}
+\def\bR{\mbb{R}}
+\def\bQ{\mbb{Q}}
+\def\bZ{\mbb{Z}}
+
+%Macros
+\newcommand{\floor}[1]{\left\lfloor#1\right\rfloor}
+\newcommand{\ceil}[1]{\left\lceil#1\right\rceil}
+\newcommand{\paren}[1]{\left(#1\right)}
+\newcommand{\angles}[1]{\left\langle#1\right\rangle}
+
+%Environments
+
+%Proof environment
+\renewenvironment{proof}
+{
+\bigskip
+\begin{center}
+\begin{tikzpicture}
+\draw[ProofPurple](-0.025\textwidth,0.45) node[anchor=west] {\textbf{\textcolor{ProofPurple}{\large{\proofterm.}}}};
+\draw[ProofPurple](0,0) arc (90:120:0.045\textwidth);
+\draw[ProofPurple](0,0) -- (0.95\textwidth,0) arc (90:60:0.045\textwidth);
+\end{tikzpicture}
+\end{center}
+}
+{
+\qed
+\begin{center}
+\begin{tikzpicture}
+\draw[ProofPurple] (0,0) -- (0.95\textwidth,0) arc (270:300:0.045\textwidth);
+\draw[ProofPurple] (0,0) arc (270:240:0.045\textwidth);
+\end{tikzpicture}
+\end{center}
+}
+
+%Regular remark
+\newenvironment{remark}
+{
+\begin{center}
+\begin{tikzpicture}
+\node[fill=RemarkBg, rectangle, inner sep=10pt, text width=\textwidth-0.1cm-20.4pt,draw=RemarkBg, sharp corners] (box) \bgroup
+\textbf{\remarkterm:}
+}
+{
+\egroup;
+\fill[RemarkBorder, sharp corners] (box.south west) rectangle ([xshift=-0.1cm] box.north west);
+\end{tikzpicture}
+\end{center}
+}
+
+%Box remark
+\newenvironment{varremark}
+{
+\begin{center}
+\begin{tikzpicture}
+\node[fill=RemarkBg, rectangle, inner sep=10pt] (box) \bgroup
+\begin{minipage}{0.75\textwidth}
+}
+{
+\end{minipage}
+\egroup;
+\draw[RemarkBorder, very thick] (box.north west) -- (box.south west) -- (box.south east) -- (box.north east) -- cycle;
+\filldraw[RemarkBorder, very thick] (box.north west) node[anchor=south west, inner xsep=10pt]{\textbf{\textcolor{white}{\remarkterm}}} rectangle ([yshift=0.5cm] box.north east);
+\end{tikzpicture}
+\end{center}
+}
+
+%Template for theorem-style environments
+\newenvironment{theorembase}[4][]{%
+\refstepcounter{theorem}
+\addcontentsline{toc}{subsection}{#2 \thesection.\thetheorem. \ #1}
+\begin{center}
+\begin{tikzpicture}
+\node[fill=#3, rectangle, inner sep=10pt, ultra thick, draw=#4, rounded corners] (box) \bgroup
+\begin{minipage}{0.75\textwidth}
+\textbf{#2 \thesection.\thetheorem \  #1}\medskip}{%
+\end{minipage}
+\egroup;
+\end{tikzpicture}
+\end{center}}
+
+%some basic ones I'll use
+\newenvironment{theorem}[1][]{
+\begin{theorembase}[#1]{\theoremterm}{TheoremBg}{TheoremBorder}}{
+\end{theorembase}}
+
+\newenvironment{corollary}[1][]{
+\begin{theorembase}[#1]{\corollaryterm}{CorollaryBg}{CorollaryBorder}}{
+\end{theorembase}}
+
+\newenvironment{lemma}[1][]{
+\begin{theorembase}[#1]{\lemmaterm}{LemmaBg}{LemmaBorder}}{
+\end{theorembase}}
+
+\newenvironment{definition}[1][]{
+\begin{theorembase}[#1]{\definitionterm}{DefinitionBg}{DefinitionBorder}}{
+\end{theorembase}}
+
