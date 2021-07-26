@@ -1,10 +1,27 @@
 \NeedsTeXFormat{LaTeX2e}
 \ProvidesPackage{daniel}[2021/01/01 Own personal macros]
 
+%When beginning document
+\AtBeginDocument{
+\newwrite\hints
+\immediate\openout\hints=\jobname.hints.tex
+\newwrite\solutions
+\immediate\openout\solutions=\jobname.sols.tex
+}
+
+%When ending document
+\AtEndDocument{
+\immediate\closeout\hints
+\immediate\closeout\solutions}
+
 %Needed packages
 \RequirePackage{xcolor}
 \RequirePackage{tikz}
-%\RequirePackage{hyperref}
+\RequirePackage{hyperref}
+\RequirePackage{environ}
+\RequirePackage{pgfornament}
+
+%Solution and hint files for linked solutions
 
 %Colors
 \definecolor{ProofPurple}{RGB}{99,0,99}
@@ -17,7 +34,8 @@
 \definecolor{LemmaBorder}{RGB}{5,5,105}
 \definecolor{LemmaBg}{RGB}{192,192,255}
 \definecolor{DefinitionBorder}{RGB}{104,5,54}
-\definecolor{DefinitionBg}{RGB}{240,231,216}
+\definecolor{DefinitionBg}{RGB}{205,175,255}
+\definecolor{ExerciseName}{RGB}{0,0,140}
 
 %Word variables for multiple languages
 \newcommand{\theoremterm}{Theorem}
@@ -26,21 +44,32 @@
 \newcommand{\proofterm}{Proof}
 \newcommand{\definitionterm}{Definition}
 \newcommand{\remarkterm}{Remark}
+\newcommand{\exerciseterm}{Exercise}
+\newcommand{\hintterm}{Hint}
+\newcommand{\solutionterm}{Solution}
+\newcommand{\sourceterm}{Source}
 
 %Language options
 \DeclareOption{fin}
-	{
-	\renewcommand{\theoremterm}{Lause}
-	\renewcommand{\corollaryterm}{Korollaari}
-	\renewcommand{\proofterm}{Todistus}
-	\renewcommand{\definitionterm}{Määritelmä}
-	\renewcommand{\remarkterm}{Huomautus}
-	}
+        {
+        \renewcommand{\theoremterm}{Lause}
+        \renewcommand{\corollaryterm}{Korollaari}
+        \renewcommand{\proofterm}{Todistus}
+        \renewcommand{\definitionterm}{Määritelmä}
+        \renewcommand{\remarkterm}{Huomautus}
+        \renewcommand{\exerciseterm}{Tehtävä}
+        \renewcommand{\hintterm}{Vinkki}
+        \renewcommand{\solutionterm}{Ratkaisu}
+        \renewcommand{\sourceterm}{Lähde}
+        }
 \DeclareOption*{\PackageWarning{daniel}{Unknown '\CurrentOption'}}
 \ProcessOptions\relax
 
 %Counters
 \newcounter{theorem}[section]
+\newcounter{exercise}[section]
+\newcounter{solution}[exercise]
+\newcounter{hint}[exercise]
 
 %Basic shortcuts
 \def\mbb#1{\mathbb{#1}}
@@ -58,15 +87,16 @@
 \newcommand{\paren}[1]{\left(#1\right)}
 \newcommand{\angles}[1]{\left\langle#1\right\rangle}
 
+
 %Environments
 
 %Proof environment
-\renewenvironment{proof}
+\newenvironment{proofbase}[1][]
 {
 \bigskip
 \begin{center}
 \begin{tikzpicture}
-\draw[ProofPurple](-0.025\textwidth,0.45) node[anchor=west] {\textbf{\textcolor{ProofPurple}{\large{\proofterm.}}}};
+\draw[ProofPurple](-0.025\textwidth,0.45) node[anchor=west] {\textbf{\textcolor{ProofPurple}{\large{#1}}}};
 \draw[ProofPurple](0,0) arc (90:120:0.045\textwidth);
 \draw[ProofPurple](0,0) -- (0.95\textwidth,0) arc (90:60:0.045\textwidth);
 \end{tikzpicture}
@@ -81,6 +111,8 @@
 \end{tikzpicture}
 \end{center}
 }
+
+\renewenvironment{proof}{\begin{proofbase}[\proofterm.]}{\end{proofbase}}
 
 %Regular remark
 \newenvironment{remark}
@@ -122,13 +154,15 @@
 \begin{tikzpicture}
 \node[fill=#3, rectangle, inner sep=10pt, ultra thick, draw=#4, rounded corners] (box) \bgroup
 \begin{minipage}{0.75\textwidth}
-\textbf{#2 \thesection.\thetheorem \  #1}\medskip}{%
+\textbf{#2 \thesection.\thetheorem. \  #1}
+
+\medskip}{%
 \end{minipage}
 \egroup;
 \end{tikzpicture}
 \end{center}}
 
-%some basic ones I'll use
+%Some basic ones I'll use
 \newenvironment{theorem}[1][]{
 \begin{theorembase}[#1]{\theoremterm}{TheoremBg}{TheoremBorder}}{
 \end{theorembase}}
@@ -144,4 +178,77 @@
 \newenvironment{definition}[1][]{
 \begin{theorembase}[#1]{\definitionterm}{DefinitionBg}{DefinitionBorder}}{
 \end{theorembase}}
+
+%Exercise environment
+\newenvironment{exercise}[1][]{
+\refstepcounter{exercise}
+
+\medskip
+
+\noindent
+\textcolor{ExerciseName}{\textbf{\hypertarget{exe:\thesection.\theexercise}{\exerciseterm\ \thesection.\theexercise. \ #1}}}}{}
+
+%Hint environment
+\newenvironment{hint*}[1][]
+{
+\begin{center}\begin{tikzpicture}\draw[ProofPurple,dotted,thick](0,0)--(\textwidth-0.8pt,0);\end{tikzpicture}\end{center}
+\textbf{\textcolor{ProofPurple}{\hintterm \ #1:}}
+}
+{
+\begin{center}\begin{tikzpicture}\draw[ProofPurple,dotted,thick](0,0)--(\textwidth-0.8pt,0);\end{tikzpicture}\end{center}
+}
+%TODO:different QED symbol
+
+\newenvironment{solution*}[1][]{
+\begin{proofbase}[\solutionterm \ #1]}{\end{proofbase}}
+
+\newenvironment{hint}[1][]{\refstepcounter{hint}\begin{hint*}[\hypertarget{hint:\thesection.\theexercise.\thehint}{}\hyperlink{exe:\thesection.\theexercise}{\thesection.\theexercise.\thehint. \ #1}]}{\end{hint*}}
+
+\newenvironment{solution}[1][]{\refstepcounter{solution}\begin{solution*}[\hypertarget{solution:\thesection.\theexercise.\thesolution}{}\hyperlink{\thesection.\theexercise}{\thesection.\theexercise.\thesolution. \ #1}]}{\end{solution*}}
+
+%Linkedexercise environment to integrate solutions and hints
+
+\NewEnviron{linkedhint}[1][]{
+        \refstepcounter{hint}
+        \immediate\write\hints{\unexpanded{\begin{hint*}}}
+        \immediate\write\hints{[\unexpanded{\hypertarget}{hint:\thesection.\theexercise.\thehint}{}\unexpanded{\hyperlink}{exe:\thesection.\theexercise}{\thesection.\theexercise.\thehint. \ #1}]}
+        \immediate\write\hints{\unexpanded\expandafter{\BODY}}
+        \immediate\write\hints{\unexpanded{\end{hint*}}}
+        \immediate\write\hints{}
+        \noindent
+        \hyperlink{sol:\thesection.\theexercise.\thehint}{\hintterm \ \thehint}
+}
+
+\NewEnviron{linkedsolution}[1][]{
+        \refstepcounter{solution}
+        \immediate\write\solutions{\unexpanded{\begin{solution*}}}
+        \immediate\write\solutions{[\unexpanded{\hypertarget}{sol:\thesection.\theexercise.\thesolution}{}\unexpanded{\hyperlink}{exe:\thesection.\theexercise}{\thesection.\theexercise.\thesolution. \ #1}]}
+        \immediate\write\solutions{\unexpanded\expandafter{\BODY}}
+        \immediate\write\solutions{\unexpanded{\end{solution*}}}
+        \immediate\write\solutions{}
+        \noindent
+        \hyperlink{sol:\thesection.\theexercise.\thesolution}{\solutionterm \ \thesolution}
+}
+
+\def\printhints{%
+        \immediate\closeout\hints
+        \immediate\openout\hints
+        \input{\jobname.hints.tex}
+}
+
+\def\printsols{%
+        \immediate\closeout\solutions
+        \immediate\openout\solutions
+                \input{\jobname.sols.tex}
+}
+
+\newcommand\addandrun[1]{
+        #1
+        \immediate\write\hints{}
+        \immediate\write\hints{\unexpanded{#1}}
+        \immediate\write\hints{}
+        \immediate\write\solutions{}
+        \immediate\write\solutions{\unexpanded{#1}}
+        \immediate\write\solutions{}
+}
 
