@@ -1,0 +1,183 @@
+\documentclass{article}
+\usepackage[utf8]{inputenc} % millä koodauksella tämä teksti tulkitaan (utf8)
+\usepackage[T1]{fontenc}    % ääkköset ja muut perusmerkit
+\usepackage[finnish]{babel} % suomen kielen tavatus
+\usepackage{amsfonts,amsthm,amsmath,amssymb,gensymb}
+%\usepackage{thmtools}
+%\usepackage{parskip}        % bigskip toimii paremmin
+%\usepackage{mathtools}
+%\usepackage[obeyspaces,spaces,hyphens,T1]{url} % URL:ien ladonta ja tavutus
+%\usepackage{hyperref}
+%\usepackage{graphicx}
+%\usepackage{biblatex}
+%\addbibresource{sources.bib}
+
+%Own .sty file stuff
+\usepackage{daniel}
+%\usepackage{tikz}
+%\usepackage{xcolor}
+
+%\hypersetup{
+%    colorlinks=true,
+%    linkcolor=red,
+%    filecolor=magenta,      
+%    urlcolor=blue,
+%}
+
+\begin{document}
+
+\section{Introduction}
+This is a package by me and for me.
+The command
+\begin{verbatim}\usepackage{daniel}\end{verbatim}
+grants you the package with the terms in English, and with the option
+\begin{verbatim}\usepackage[fin]{daniel}\end{verbatim}
+you get all the terms in Finnish.
+Terms can also be renamed by hand e.g.
+\begin{verbatim}\renewcommand{\theoremterm}{Lause}.\end{verbatim}
+Everything has preset colors, but they can be changed easily e.g.
+\begin{verbatim}\definecolor{TheoremBg}{RGB}{rrr,ggg,bbb},\end{verbatim}
+however if you do change the colors know that you are infringing upon my artistic vision.
+
+\section{Macros}
+It's got some macros
+\begin{verbatim}
+
+%Basic shortcuts
+\def\mbb#1{\mathbb{#1}}
+\def\mfk#1{\mathfrak{#1}}
+
+\def\bN{\mbb{N}}
+\def\bC{\mbb{C}}
+\def\bR{\mbb{R}}
+\def\bQ{\mbb{Q}}
+\def\bZ{\mbb{Z}}
+
+%Macros
+\newcommand{\floor}[1]{\left\lfloor#1\right\rfloor}
+\newcommand{\ceil}[1]{\left\lceil#1\right\rceil}
+\newcommand{\paren}[1]{\left(#1\right)}
+\newcommand{\angles}[1]{\left\langle#1\right\rangle}
+
+\end{verbatim}
+
+\section{Theorembase environments}
+There's a \texttt{theorembase} environment. For example the code
+
+\begin{verbatim}
+\begin{theorembase}[name]{classification}{red}{green}
+body text
+\end{theorembase}
+\end{verbatim}
+
+gives you
+
+\begin{theorembase}[name]{classification}{red}{green}
+body text
+\end{theorembase}
+
+All theorembase environments are numbered with the \texttt{theorem} counter.
+There are also the built-in theorembase environments.
+
+
+They are \texttt{theorem}, \texttt{corollary}, \texttt{lemma}, and \texttt{definition}.
+Their look can be tweaked by redefining \texttt{theorembase}.
+
+For example:
+
+\begin{verbatim}
+\begin{theorem}[theorem name]
+theorem text
+\end{theorem}
+
+\begin{corollary}[corollary name]
+corollary text
+\end{corollary}
+
+\begin{lemma}[lemma name]
+lemma text
+\end{lemma}
+
+\begin{definition}[definition name]
+definition text
+\end{definition}
+\end{verbatim}
+
+\begin{theorem}[theorem name]
+theorem text
+\end{theorem}
+
+\begin{corollary}[corollary name]
+corollary text
+\end{corollary}
+
+\begin{lemma}[lemma name]
+lemma text
+\end{lemma}
+
+\begin{definition}[definition name]
+definition text
+\end{definition}
+
+\section{Exercises}
+
+All of the following environments in this section take an optional argument for their title.
+
+
+
+
+\begin{exercise}
+Prove that this package is worth using.
+\end{exercise}
+
+\begin{linkedhint}
+Consider how you can have linked hints at the end using the \texttt{linkedhint} environment
+\end{linkedhint}
+\begin{linkedsolution}
+The proof is simple, consider the all the useful environments and assorted macros here.
+You would be stupid not to use my package.
+Numbered theorems, numerous macros, and a simple \texttt{exercise} environment, what more do you need?
+It also has a \texttt{linkedsolution} environment.
+\end{linkedsolution}
+
+\begin{hint}
+Consider also the fact that you can have unlinked hints and solutions with the \texttt{hint} and \texttt{solution} environments respectively.
+\end{hint}
+
+\begin{hint*}
+You can even have unnumbered hints and solutions with the \texttt{hint*} and \texttt{solution*} environments respectively.
+\end{hint*}
+
+The \texttt{hint} and \texttt{linkedhint} environments both use the \texttt{hint*} environment, so redefining it is sufficient to change all of their appearances.
+The statement symmetrically holds for solutions.
+
+\section{Misc}
+
+\begin{remark} Check out this \texttt{remark} environment\end{remark}
+
+The package of course also has a \texttt{proof} environment.
+
+\begin{proof}
+This here proves the existence of that environment.
+\end{proof}
+
+All of the environments can be nested, but I cannot guarantee it will look good.
+For example, the nested remark
+
+\begin{remark}
+Nested remark
+\begin{remark}
+Look mom I'm nested
+\end{remark}
+\end{remark}
+
+\section{Hints}
+
+\printhints
+
+\section{Solutions}
+
+\printsols
+
+\end{document}
+
