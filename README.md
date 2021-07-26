@@ -7,8 +7,3 @@ For english usage:
 For finnish usage:
 `\includepackage[fin]{daniel}`
 
-Requires in preamble:
-```
-\usepackage{xcolor}
-\usepackage{tikz}
-```
