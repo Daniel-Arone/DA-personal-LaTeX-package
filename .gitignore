@@ -1,0 +1,10 @@
+#Ignore log files
+*.log
+*.out
+
+#Ignore auxiliary files
+*.aux
+*.toc
+*.tof
+*.sols.tex
+*.hints.tex
