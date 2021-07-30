@@ -8,3 +8,7 @@
 *.tof
 *.sols.tex
 *.hints.tex
+
+#Ignore my test file
+test.tex
+test.pdf

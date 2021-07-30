@@ -1,27 +1,13 @@
 \NeedsTeXFormat{LaTeX2e}
 \ProvidesPackage{daniel}[2021/01/01 Own personal macros]
 
-%When beginning document
-\AtBeginDocument{
-\newwrite\hints
-\immediate\openout\hints=\jobname.hints.tex
-\newwrite\solutions
-\immediate\openout\solutions=\jobname.sols.tex
-}
-
-%When ending document
-\AtEndDocument{
-\immediate\closeout\hints
-\immediate\closeout\solutions}
 
 %Needed packages
 \RequirePackage{xcolor}
 \RequirePackage{tikz}
 \RequirePackage{hyperref}
 \RequirePackage{environ}
-\RequirePackage{pgfornament}
 
-%Solution and hint files for linked solutions
 
 %Colors
 \definecolor{ProofPurple}{RGB}{99,0,99}
@@ -45,9 +31,15 @@
 \newcommand{\definitionterm}{Definition}
 \newcommand{\remarkterm}{Remark}
 \newcommand{\exerciseterm}{Exercise}
+\newcommand{\exercisepluralterm}{Exercises}
 \newcommand{\hintterm}{Hint}
 \newcommand{\solutionterm}{Solution}
 \newcommand{\sourceterm}{Source}
+
+%Jank macro for package options
+\newcommand{\daniel@iflinked}{TRUE}
+
+%Package options
 
 %Language options
 \DeclareOption{fin}
@@ -58,10 +50,15 @@
         \renewcommand{\definitionterm}{Määritelmä}
         \renewcommand{\remarkterm}{Huomautus}
         \renewcommand{\exerciseterm}{Tehtävä}
+	\renewcommand{\exercisepluralterm}{Tehtävät}
         \renewcommand{\hintterm}{Vinkki}
         \renewcommand{\solutionterm}{Ratkaisu}
         \renewcommand{\sourceterm}{Lähde}
         }
+
+%Unlinked option
+\DeclareOption{unlinked}{\renewcommand{\daniel@iflinked}{FALSE}}
+
 \DeclareOption*{\PackageWarning{daniel}{Unknown '\CurrentOption'}}
 \ProcessOptions\relax
 
@@ -86,7 +83,27 @@
 \newcommand{\ceil}[1]{\left\lceil#1\right\rceil}
 \newcommand{\paren}[1]{\left(#1\right)}
 \newcommand{\angles}[1]{\left\langle#1\right\rangle}
+\newcommand{\exercisedivider}{\begin{center}\begin{tikzpicture}\draw[thick, ExerciseName, arrows=|-|](0,0)--(\textwidth-0.8pt,0);\end{tikzpicture}\end{center}}
 
+%Jank macros
+\newcommand{\daniel@true}{TRUE}
+%TODO:use a logic package to make this cleaner
+
+%Set up files if linked
+\ifx\daniel@iflinked\daniel@true
+%When beginning document
+\AtBeginDocument{
+\newwrite\hints
+\immediate\openout\hints=\jobname.hints.tex
+\newwrite\solutions
+\immediate\openout\solutions=\jobname.sols.tex
+}
+
+%When ending document
+\AtEndDocument{
+\immediate\closeout\hints
+\immediate\closeout\solutions}
+\fi
 
 %Environments
 
@@ -180,13 +197,16 @@
 \end{theorembase}}
 
 %Exercise environment
-\newenvironment{exercise}[1][]{
+%\newenvironment{exercise}[1][]{
+\NewEnviron{exercise}[1][]{
 \refstepcounter{exercise}
-
+\medskip
+\noindent
+\textcolor{ExerciseName}{\textbf{\hypertarget{exe:\thesection.\theexercise}{\exerciseterm\ \thesection.\theexercise. \ #1}}}
+\BODY
 \medskip
 
-\noindent
-\textcolor{ExerciseName}{\textbf{\hypertarget{exe:\thesection.\theexercise}{\exerciseterm\ \thesection.\theexercise. \ #1}}}}{}
+}
 
 %Hint environment
 \newenvironment{hint*}[1][]
@@ -197,7 +217,6 @@
 {
 \begin{center}\begin{tikzpicture}\draw[ProofPurple,dotted,thick](0,0)--(\textwidth-0.8pt,0);\end{tikzpicture}\end{center}
 }
-%TODO:different QED symbol
 
 \newenvironment{solution*}[1][]{
 \begin{proofbase}[\solutionterm \ #1]}{\end{proofbase}}
@@ -208,26 +227,35 @@
 
 %Linkedexercise environment to integrate solutions and hints
 
-\NewEnviron{linkedhint}[1][]{
-        \refstepcounter{hint}
-        \immediate\write\hints{\unexpanded{\begin{hint*}}}
-        \immediate\write\hints{[\unexpanded{\hypertarget}{hint:\thesection.\theexercise.\thehint}{}\unexpanded{\hyperlink}{exe:\thesection.\theexercise}{\thesection.\theexercise.\thehint. \ #1}]}
-        \immediate\write\hints{\unexpanded\expandafter{\BODY}}
-        \immediate\write\hints{\unexpanded{\end{hint*}}}
-        \immediate\write\hints{}
-        \noindent
-        \hyperlink{sol:\thesection.\theexercise.\thehint}{\hintterm \ \thehint}
-}
+\NewEnviron{linkedhint}[1][]{%
+\refstepcounter{hint}%
+\immediate\write\hints{\unexpanded{\begin{hint*}}}%
+\immediate\write\hints{[\unexpanded{\hypertarget}{hint:\thesection.\theexercise.\thehint}{}\unexpanded{\hyperlink}{exe:\thesection.\theexercise}{\thesection.\theexercise.\thehint. \ #1}]}%
+\immediate\write\hints{\unexpanded\expandafter{\BODY}}%
+\immediate\write\hints{\unexpanded{\end{hint*}}}%
+\immediate\write\hints{}%
+\noindent\hyperlink{hint:\thesection.\theexercise.\thehint}{\hintterm \ \thehint}\quad}
 
-\NewEnviron{linkedsolution}[1][]{
-        \refstepcounter{solution}
-        \immediate\write\solutions{\unexpanded{\begin{solution*}}}
-        \immediate\write\solutions{[\unexpanded{\hypertarget}{sol:\thesection.\theexercise.\thesolution}{}\unexpanded{\hyperlink}{exe:\thesection.\theexercise}{\thesection.\theexercise.\thesolution. \ #1}]}
-        \immediate\write\solutions{\unexpanded\expandafter{\BODY}}
-        \immediate\write\solutions{\unexpanded{\end{solution*}}}
-        \immediate\write\solutions{}
-        \noindent
-        \hyperlink{sol:\thesection.\theexercise.\thesolution}{\solutionterm \ \thesolution}
+\NewEnviron{linkedsolution}[1][]{%
+\refstepcounter{solution}%
+\immediate\write\solutions{\unexpanded{\begin{solution*}}}%
+\immediate\write\solutions{[\unexpanded{\hypertarget}{sol:\thesection.\theexercise.\thesolution}{}\unexpanded{\hyperlink}{exe:\thesection.\theexercise}{\thesection.\theexercise.\thesolution. \ #1}]}%
+\immediate\write\solutions{\unexpanded\expandafter{\BODY}}%
+\immediate\write\solutions{\unexpanded{\end{solution*}}}%
+\immediate\write\solutions{}%
+\noindent\hyperlink{sol:\thesection.\theexercise.\thesolution}{\solutionterm \ \thesolution}\quad}
+
+%Put exercises neatly
+\newenvironment{exerciseseries}
+{
+\medskip
+
+\textcolor{ExerciseName}{\textbf{\large\exercisepluralterm}}
+\addcontentsline{toc}{subsection}{\exercisepluralterm}
+\exercisedivider
+}
+{
+\exercisedivider
 }
 
 \def\printhints{%
@@ -251,4 +279,5 @@
         \immediate\write\solutions{\unexpanded{#1}}
         \immediate\write\solutions{}
 }
+
 
