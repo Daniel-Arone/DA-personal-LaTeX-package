@@ -78,11 +78,15 @@
 \def\bQ{\mbb{Q}}
 \def\bZ{\mbb{Z}}
 
+\def\ord{\mathrm{ord}}
+\def\lcm{\mathrm{lcm}}
+
 %Macros
 \newcommand{\floor}[1]{\left\lfloor#1\right\rfloor}
 \newcommand{\ceil}[1]{\left\lceil#1\right\rceil}
 \newcommand{\paren}[1]{\left(#1\right)}
 \newcommand{\angles}[1]{\left\langle#1\right\rangle}
+\newcommand{\abs}[1]{\left|#1\right|}
 \newcommand{\exercisedivider}{\begin{center}\begin{tikzpicture}\draw[thick, ExerciseName, arrows=|-|](0,0)--(\textwidth-0.8pt,0);\end{tikzpicture}\end{center}}
 
 %Jank macros
@@ -166,7 +170,6 @@
 %Template for theorem-style environments
 \newenvironment{theorembase}[4][]{%
 \refstepcounter{theorem}
-\addcontentsline{toc}{subsection}{#2 \thesection.\thetheorem. \ #1}
 \begin{center}
 \begin{tikzpicture}
 \node[fill=#3, rectangle, inner sep=10pt, ultra thick, draw=#4, rounded corners] (box) \bgroup
@@ -182,7 +185,8 @@
 %Some basic ones I'll use
 \newenvironment{theorem}[1][]{
 \begin{theorembase}[#1]{\theoremterm}{TheoremBg}{TheoremBorder}}{
-\end{theorembase}}
+\end{theorembase}
+\addcontentsline{toc}{subsection}{\theoremterm \ \thesection.\thetheorem. \ #1}}
 
 \newenvironment{corollary}[1][]{
 \begin{theorembase}[#1]{\corollaryterm}{CorollaryBg}{CorollaryBorder}}{
