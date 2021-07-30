@@ -113,7 +113,7 @@
 \bigskip
 \begin{center}
 \begin{tikzpicture}
-\draw[ProofPurple](-0.025\textwidth,0.45) node[anchor=west] {\textbf{\textcolor{ProofPurple}{\large{#1}}}};
+\draw[ProofPurple](-0.02\textwidth,0.45) node[anchor=west] {\textbf{\textcolor{ProofPurple}{\large{#1}}}};
 \draw[ProofPurple](0,0) arc (90:120:0.045\textwidth);
 \draw[ProofPurple](0,0) -- (0.95\textwidth,0) arc (90:60:0.045\textwidth);
 \end{tikzpicture}
@@ -201,11 +201,13 @@
 \NewEnviron{exercise}[1][]{
 \refstepcounter{exercise}
 \medskip
+
 \noindent
 \textcolor{ExerciseName}{\textbf{\hypertarget{exe:\thesection.\theexercise}{\exerciseterm\ \thesection.\theexercise. \ #1}}}
 \BODY
 \medskip
 
+\ignorespacesafterend
 }
 
 %Hint environment
@@ -234,7 +236,8 @@
 \immediate\write\hints{\unexpanded\expandafter{\BODY}}%
 \immediate\write\hints{\unexpanded{\end{hint*}}}%
 \immediate\write\hints{}%
-\noindent\hyperlink{hint:\thesection.\theexercise.\thehint}{\hintterm \ \thehint}\quad}
+\noindent\textcolor{ProofPurple}{\scriptsize{\hyperlink{hint:\thesection.\theexercise.\thehint}{\hintterm~\thehint}\quad}}}
+
 
 \NewEnviron{linkedsolution}[1][]{%
 \refstepcounter{solution}%
@@ -243,19 +246,22 @@
 \immediate\write\solutions{\unexpanded\expandafter{\BODY}}%
 \immediate\write\solutions{\unexpanded{\end{solution*}}}%
 \immediate\write\solutions{}%
-\noindent\hyperlink{sol:\thesection.\theexercise.\thesolution}{\solutionterm \ \thesolution}\quad}
+\noindent\textcolor{ProofPurple}{\scriptsize{\hyperlink{sol:\thesection.\theexercise.\thesolution}{\solutionterm~\thesolution}\quad}}}
 
 %Put exercises neatly
 \newenvironment{exerciseseries}
 {
 \medskip
 
-\textcolor{ExerciseName}{\textbf{\large\exercisepluralterm}}
+\noindent\begin{minipage}{\textwidth}
+\noindent\textcolor{ExerciseName}{\textbf{\large\exercisepluralterm}}
 \addcontentsline{toc}{subsection}{\exercisepluralterm}
 \exercisedivider
+
 }
 {
 \exercisedivider
+\end{minipage}
 }
 
 \def\printhints{%
