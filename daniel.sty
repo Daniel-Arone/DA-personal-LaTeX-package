@@ -183,10 +183,14 @@
 \end{center}}
 
 %Some basic ones I'll use
-\newenvironment{theorem}[1][]{
-\begin{theorembase}[#1]{\theoremterm}{TheoremBg}{TheoremBorder}}{
+\newenvironment{theorem}[1][]
+{
+\begin{theorembase}[#1]{\theoremterm}{TheoremBg}{TheoremBorder}
+\addcontentsline{toc}{subsection}{\theoremterm \ \thesection.\thetheorem. \ #1}
+}
+{
 \end{theorembase}
-\addcontentsline{toc}{subsection}{\theoremterm \ \thesection.\thetheorem. \ #1}}
+}
 
 \newenvironment{corollary}[1][]{
 \begin{theorembase}[#1]{\corollaryterm}{CorollaryBg}{CorollaryBorder}}{
