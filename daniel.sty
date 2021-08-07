@@ -7,7 +7,7 @@
 \RequirePackage{tikz}
 \RequirePackage{hyperref}
 \RequirePackage{environ}
-
+\RequirePackage{imakeidx}
 
 %Colors
 \definecolor{ProofPurple}{RGB}{99,0,99}
@@ -169,6 +169,7 @@
 
 %Template for theorem-style environments
 \newenvironment{theorembase}[4][]{%
+\ifx&#1&\else\index{#1}\fi
 \refstepcounter{theorem}
 \begin{center}
 \begin{tikzpicture}
