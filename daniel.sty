@@ -112,12 +112,12 @@
 %Environments
 
 %Proof environment
-\newenvironment{proofbase}[1][]
+\newenvironment{proofbase}[2][]
 {
 \bigskip
 \begin{center}
 \begin{tikzpicture}
-\draw[ProofPurple](-0.02\textwidth,0.45) node[anchor=west] {\textbf{\textcolor{ProofPurple}{\large{#1}}}};
+\draw[ProofPurple](-0.02\textwidth,0.45) node[anchor=west] {\textbf{\textcolor{ProofPurple}{\large{#2 \ #1}}}};
 \draw[ProofPurple](0,0) arc (90:120:0.045\textwidth);
 \draw[ProofPurple](0,0) -- (0.95\textwidth,0) arc (90:60:0.045\textwidth);
 \end{tikzpicture}
@@ -133,7 +133,7 @@
 \end{center}
 }
 
-\renewenvironment{proof}{\begin{proofbase}[\proofterm.]}{\end{proofbase}}
+\renewenvironment{proof}[1][]{\begin{proofbase}[#1]{\proofterm.}}{\end{proofbase}}
 
 %Regular remark
 \newenvironment{remark}
@@ -169,7 +169,7 @@
 
 %Template for theorem-style environments
 \newenvironment{theorembase}[4][]{%
-\ifx&#1&\else\index{#1}\label{#2:#1}\fi
+\ifx&#1&\else\index{#1}\fi
 \refstepcounter{theorem}
 \begin{center}
 \begin{tikzpicture}
@@ -230,7 +230,7 @@
 }
 
 \newenvironment{solution*}[1][]{
-\begin{proofbase}[\solutionterm \ #1]}{\end{proofbase}}
+\begin{proofbase}[#1]{\solutionterm}}{\end{proofbase}}
 
 \newenvironment{hint}[1][]{\refstepcounter{hint}\begin{hint*}[\hypertarget{hint:\thesection.\theexercise.\thehint}{}\hyperlink{exe:\thesection.\theexercise}{\thesection.\theexercise.\thehint. \ #1}]}{\end{hint*}}
 
