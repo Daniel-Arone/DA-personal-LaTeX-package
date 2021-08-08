@@ -169,7 +169,7 @@
 
 %Template for theorem-style environments
 \newenvironment{theorembase}[4][]{%
-\ifx&#1&\else\index{#1}\fi
+\ifx&#1&\else\index{#1}\label{#2:#1}\fi
 \refstepcounter{theorem}
 \begin{center}
 \begin{tikzpicture}
@@ -262,7 +262,7 @@
 {
 \medskip
 
-\noindent\begin{minipage}{\textwidth}
+\raggedright
 \noindent\textcolor{ExerciseName}{\textbf{\large\exercisepluralterm}}
 \addcontentsline{toc}{subsection}{\exercisepluralterm}
 \exercisedivider
@@ -270,7 +270,6 @@
 }
 {
 \exercisedivider
-\end{minipage}
 }
 
 \def\printhints{%
