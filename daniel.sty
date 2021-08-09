@@ -64,6 +64,7 @@
 
 %Counters
 \newcounter{theorem}[section]
+\newcounter{proof}[theorem]
 \newcounter{exercise}[section]
 \newcounter{solution}[exercise]
 \newcounter{hint}[exercise]
@@ -101,12 +102,16 @@
 \immediate\openout\hints=\jobname.hints.tex
 \newwrite\solutions
 \immediate\openout\solutions=\jobname.sols.tex
+\newwrite\proofs
+\immediate\openout\proofs=\jobname.proofs.tex
 }
 
 %When ending document
 \AtEndDocument{
 \immediate\closeout\hints
-\immediate\closeout\solutions}
+\immediate\closeout\solutions
+\immediate\closeout\solutions
+}
 \fi
 
 %Environments
@@ -171,6 +176,7 @@
 \newenvironment{theorembase}[4][]{%
 \ifx&#1&\else\index{#1}\fi
 \refstepcounter{theorem}
+\hypertarget{theorem:\thesection.\thetheorem}{}
 \begin{center}
 \begin{tikzpicture}
 \node[fill=#3, rectangle, inner sep=10pt, ultra thick, draw=#4, rounded corners] (box) \bgroup
@@ -257,6 +263,16 @@
 \immediate\write\solutions{}%
 \noindent\textcolor{ProofPurple}{\scriptsize{\hyperlink{sol:\thesection.\theexercise.\thesolution}{\solutionterm~\thesolution}\quad}}}
 
+
+\NewEnviron{linkedproof}[1][]{%
+\refstepcounter{proof}%
+\immediate\write\proofs{\unexpanded{\begin{proofbase}}}%
+\immediate\write\proofs{[\unexpanded{\hypertarget}{proof:\thesection.\thetheorem.\theproof}{}\unexpanded{\hyperlink}{theorem:\thesection.\thetheorem}{\thesection.\thetheorem.\theproof \ #1}]{\proofterm}}%
+\immediate\write\proofs{\unexpanded\expandafter{\BODY}}%
+\immediate\write\proofs{\unexpanded{\end{proofbase}}}%
+\immediate\write\proofs{}%
+\noindent\textcolor{ProofPurple}{\scriptsize{\hyperlink{proof:\thesection.\thetheorem.\theproof}{\proofterm~\theproof}\quad}}}
+
 %Put exercises neatly
 \newenvironment{exerciseseries}
 {
@@ -281,7 +297,13 @@
 \def\printsols{%
         \immediate\closeout\solutions
         \immediate\openout\solutions
-                \input{\jobname.sols.tex}
+        \input{\jobname.sols.tex}
+}
+
+\def\printproofs{%
+	\immediate\closeout\proofs
+	\immediate\openout\proofs
+	\input{\jobname.proofs.tex}
 }
 
 \newcommand\addandrun[1]{
@@ -292,6 +314,9 @@
         \immediate\write\solutions{}
         \immediate\write\solutions{\unexpanded{#1}}
         \immediate\write\solutions{}
+        \immediate\write\proofs{}
+        \immediate\write\proofs{\unexpanded{#1}}
+        \immediate\write\proofs{}
 }
 
 
