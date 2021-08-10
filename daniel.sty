@@ -38,8 +38,9 @@
 \newcommand{\solutionterm}{Solution}
 \newcommand{\sourceterm}{Source}
 
-%Jank macro for package options
-\newcommand{\daniel@iflinked}{TRUE}
+%Logic macros
+\newif\ifdaniel@linked
+\daniel@linkedtrue
 
 %Package options
 
@@ -59,7 +60,7 @@
         }
 
 %Unlinked option
-\DeclareOption{unlinked}{\renewcommand{\daniel@iflinked}{FALSE}}
+\DeclareOption{unlinked}{\daniel@linkedfalse}
 
 \DeclareOption*{\PackageWarning{daniel}{Unknown '\CurrentOption'}}
 \ProcessOptions\relax
@@ -92,12 +93,7 @@
 \newcommand{\abs}[1]{\left|#1\right|}
 \newcommand{\exercisedivider}{\begin{center}\begin{tikzpicture}\draw[thick, ExerciseName, arrows=|-|](0,0)--(\textwidth-0.8pt,0);\end{tikzpicture}\end{center}}
 
-%Jank macros
-\newcommand{\daniel@true}{TRUE}
-%TODO:use a logic package to make this cleaner
-
-%Set up files if linked
-\ifx\daniel@iflinked\daniel@true
+\ifdaniel@linked
 %When beginning document
 \AtBeginDocument{
 \newwrite\hints
@@ -115,7 +111,6 @@
 \immediate\closeout\solutions
 }
 \fi
-
 %Environments
 
 %Proof environment
