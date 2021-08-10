@@ -84,6 +84,8 @@
 
 \def\ord{\mathrm{ord}}
 \def\lcm{\mathrm{lcm}}
+\def\syt{\mathrm{syt}}
+\def\pym{\mathrm{pym}}
 
 %Macros
 \newcommand{\floor}[1]{\left\lfloor#1\right\rfloor}
@@ -209,17 +211,16 @@
 \end{theorembase}}
 
 %Exercise environment
-%\newenvironment{exercise}[1][]{
-\NewEnviron{exercise}[1][]{
+\newenvironment{exercise}[1][]{
 \refstepcounter{exercise}
 \medskip
 
 \noindent
 \textcolor{ExerciseName}{\textbf{\hypertarget{exe:\thesection.\theexercise}{\exerciseterm\ \thesection.\theexercise. \ #1}}}
-\BODY
-\medskip
 
-\ignorespacesafterend
+}
+{
+\medskip
 }
 
 %Hint environment
@@ -239,7 +240,7 @@
 
 \newenvironment{solution}[1][]{\refstepcounter{solution}\begin{solution*}[\hypertarget{solution:\thesection.\theexercise.\thesolution}{}\hyperlink{\thesection.\theexercise}{\thesection.\theexercise.\thesolution. \ #1}]}{\end{solution*}}
 
-%Linkedexercise environment to integrate solutions and hints
+%Linked environments
 
 \NewEnviron{linkedhint}[1][]{%
 \refstepcounter{hint}%
@@ -248,7 +249,8 @@
 \immediate\write\hints{\unexpanded\expandafter{\BODY}}%
 \immediate\write\hints{\unexpanded{\end{hint*}}}%
 \immediate\write\hints{}%
-\noindent\textcolor{ProofPurple}{\scriptsize{\hyperlink{hint:\thesection.\theexercise.\thehint}{\hintterm~\thehint}\quad}}}
+\makebox[0.15\textwidth][l]{\textcolor{ProofPurple}{\scriptsize{\hyperlink{hint:\thesection.\theexercise.\thehint}{\hintterm~\thehint}}}} 
+}
 
 
 \NewEnviron{linkedsolution}[1][]{%
@@ -258,7 +260,8 @@
 \immediate\write\solutions{\unexpanded\expandafter{\BODY}}%
 \immediate\write\solutions{\unexpanded{\end{solution*}}}%
 \immediate\write\solutions{}%
-\noindent\textcolor{ProofPurple}{\scriptsize{\hyperlink{sol:\thesection.\theexercise.\thesolution}{\solutionterm~\thesolution}\quad}}}
+\makebox[0.15\textwidth][l]{\textcolor{ProofPurple}{\scriptsize{\hyperlink{sol:\thesection.\theexercise.\thesolution}{\solutionterm~\thesolution}}}}
+}
 
 
 \NewEnviron{linkedproof}[1][]{%
@@ -268,7 +271,8 @@
 \immediate\write\proofs{\unexpanded\expandafter{\BODY}}%
 \immediate\write\proofs{\unexpanded{\end{proofbase}}}%
 \immediate\write\proofs{}%
-\noindent\textcolor{ProofPurple}{\scriptsize{\hyperlink{proof:\thesection.\thetheorem.\theproof}{\proofterm~\theproof}\quad}}}
+\makebox[0.15\textwidth][l]{\textcolor{ProofPurple}{\scriptsize{\hyperlink{proof:\thesection.\thetheorem.\theproof}{\proofterm~\theproof}}}}
+}
 
 %Put exercises neatly
 \newenvironment{exerciseseries}
@@ -279,7 +283,6 @@
 \noindent\textcolor{ExerciseName}{\textbf{\large\exercisepluralterm}}
 \addcontentsline{toc}{subsection}{\exercisepluralterm}
 \exercisedivider
-
 }
 {
 \exercisedivider
