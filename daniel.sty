@@ -277,13 +277,13 @@
 }
 
 %Put exercises neatly
-\newenvironment{exerciseseries}
+\newenvironment{exerciseseries}[1][]
 {
 \medskip
 
 \raggedright
-\noindent\textcolor{ExerciseName}{\textbf{\large\exercisepluralterm}}
-\addcontentsline{toc}{subsection}{\exercisepluralterm}
+\noindent\textcolor{ExerciseName}{\textbf{\large\exercisepluralterm \ #1}}
+\addcontentsline{toc}{subsection}{\exercisepluralterm \ #1}
 \exercisedivider
 }
 {
