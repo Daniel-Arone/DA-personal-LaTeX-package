@@ -9,7 +9,6 @@
 \RequirePackage{imakeidx}
 \RequirePackage{hyperref}
 \RequirePackage{amsthm}
-%TODO:fix bug with renewenvironment{proof} so that amsthm not required
 
 %Colors
 \definecolor{ProofPurple}{RGB}{99,0,99}
@@ -216,11 +215,14 @@
 \medskip
 
 \noindent
-\textcolor{ExerciseName}{\textbf{\hypertarget{exe:\thesection.\theexercise}{\exerciseterm\ \thesection.\theexercise. \ #1}}}
-
+\textcolor{ExerciseName}{\textbf{\hypertarget{exe:\thesection.\theexercise}{\exerciseterm\ \thesection.\theexercise.}}}
+\ifx&#1&%
+\else\textcolor{ExerciseName}{\textbf{\ #1}}\fi
+\ignorespaces
 }
 {
-\medskip
+\linebreak[0]
+\ignorespacesafterend
 }
 
 %Hint environment
