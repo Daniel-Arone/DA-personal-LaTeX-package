@@ -1,0 +1,236 @@
+\NeedsTeXFormat{LaTeX2e}
+\ProvidesPackage{linkedsols}[2021/08/20 Linked solutions at end of pdf]
+
+
+%Needed packages
+\RequirePackage{environ}
+\RequirePackage{hyperref}
+
+%Counters
+\newcounter{exercise}[section]
+\newcounter{solution}[exercise]
+\newcounter{hint}[exercise]
+
+%When beginning document
+\AtBeginDocument{
+\newwrite\hints
+\immediate\openout\hints=\jobname.hints.tex
+\newwrite\solutions
+\immediate\openout\solutions=\jobname.sols.tex
+}
+
+%When ending document
+\AtEndDocument{
+\immediate\closeout\hints
+\immediate\closeout\solutions
+}
+%Environments
+
+%Proof environment
+\newenvironment{proofbase}[2][]
+{
+\bigskip
+\begin{center}
+\begin{tikzpicture}
+\draw[ProofPurple](-0.02\textwidth,0.45) node[anchor=west] {\textbf{\textcolor{ProofPurple}{\large{#2 \ #1}}}};
+\draw[ProofPurple](0,0) arc (90:120:0.045\textwidth);
+\draw[ProofPurple](0,0) -- (0.95\textwidth,0) arc (90:60:0.045\textwidth);
+\end{tikzpicture}
+\end{center}
+}
+{
+\qed
+\begin{center}
+\begin{tikzpicture}
+\draw[ProofPurple] (0,0) -- (0.95\textwidth,0) arc (270:300:0.045\textwidth);
+\draw[ProofPurple] (0,0) arc (270:240:0.045\textwidth);
+\end{tikzpicture}
+\end{center}
+}
+
+\renewenvironment{proof}[1][]{\begin{proofbase}[#1]{\proofterm.}}{\end{proofbase}}
+
+%Regular remark
+\newenvironment{remark}
+{
+\begin{center}
+\begin{tikzpicture}
+\node[fill=RemarkBg, rectangle, inner sep=10pt, text width=\textwidth-0.1cm-20.4pt,draw=RemarkBg, sharp corners] (box) \bgroup
+\textbf{\remarkterm:}
+}
+{
+\egroup;
+\fill[RemarkBorder, sharp corners] (box.south west) rectangle ([xshift=-0.1cm] box.north west);
+\end{tikzpicture}
+\end{center}
+}
+
+%Box remark
+\newenvironment{varremark}
+{
+\begin{center}
+\begin{tikzpicture}
+\node[fill=RemarkBg, rectangle, inner sep=10pt] (box) \bgroup
+\begin{minipage}{0.75\textwidth}
+}
+{
+\end{minipage}
+\egroup;
+\draw[RemarkBorder, very thick] (box.north west) -- (box.south west) -- (box.south east) -- (box.north east) -- cycle;
+\filldraw[RemarkBorder, very thick] (box.north west) node[anchor=south west, inner xsep=10pt]{\textbf{\textcolor{white}{\remarkterm}}} rectangle ([yshift=0.5cm] box.north east);
+\end{tikzpicture}
+\end{center}
+}
+
+%Template for theorem-style environments
+\newenvironment{theorembase}[4][]{%
+\ifx&#1&\else\index{#1}\fi
+\refstepcounter{theorem}
+\hypertarget{theorem:\thesection.\thetheorem}{}
+\begin{center}
+\begin{tikzpicture}
+\node[fill=#3, rectangle, inner sep=10pt, ultra thick, draw=#4, rounded corners] (box) \bgroup
+\begin{minipage}{0.75\textwidth}
+\textbf{#2 \thesection.\thetheorem. \  #1}
+
+\medskip}{%
+\end{minipage}
+\egroup;
+\end{tikzpicture}
+\end{center}}
+
+%Some basic ones I'll use
+\newenvironment{theorem}[1][]
+{
+\begin{theorembase}[#1]{\theoremterm}{TheoremBg}{TheoremBorder}
+\addcontentsline{toc}{subsection}{\theoremterm \ \thesection.\thetheorem. \ #1}
+}
+{
+\end{theorembase}
+}
+
+\newenvironment{corollary}[1][]{
+\begin{theorembase}[#1]{\corollaryterm}{CorollaryBg}{CorollaryBorder}}{
+\end{theorembase}}
+
+\newenvironment{lemma}[1][]{
+\begin{theorembase}[#1]{\lemmaterm}{LemmaBg}{LemmaBorder}}{
+\end{theorembase}}
+
+\newenvironment{definition}[1][]{
+\begin{theorembase}[#1]{\definitionterm}{DefinitionBg}{DefinitionBorder}}{
+\end{theorembase}}
+
+%Exercise environment
+\newenvironment{exercise}[1][]{
+\refstepcounter{exercise}
+\medskip
+
+\noindent
+\textcolor{ExerciseName}{\textbf{\hypertarget{exe:\thesection.\theexercise}{\exerciseterm\ \thesection.\theexercise.}}}
+\ifx&#1&%
+\else\textcolor{ExerciseName}{\textbf{\ #1}}\fi
+\ignorespaces
+}
+{
+\linebreak[0]
+\ignorespacesafterend
+}
+
+%Hint environment
+\newenvironment{hint*}[1][]
+{
+\begin{center}\begin{tikzpicture}\draw[ProofPurple,dotted,thick](0,0)--(\textwidth-0.8pt,0);\end{tikzpicture}\end{center}
+\textbf{\textcolor{ProofPurple}{\hintterm \ #1:}}
+}
+{
+\begin{center}\begin{tikzpicture}\draw[ProofPurple,dotted,thick](0,0)--(\textwidth-0.8pt,0);\end{tikzpicture}\end{center}
+}
+
+\newenvironment{solution*}[1][]{
+\begin{proofbase}[#1]{\solutionterm}}{\end{proofbase}}
+
+\newenvironment{hint}[1][]{\refstepcounter{hint}\begin{hint*}[\hypertarget{hint:\thesection.\theexercise.\thehint}{}\hyperlink{exe:\thesection.\theexercise}{\thesection.\theexercise.\thehint. \ #1}]}{\end{hint*}}
+
+\newenvironment{solution}[1][]{\refstepcounter{solution}\begin{solution*}[\hypertarget{solution:\thesection.\theexercise.\thesolution}{}\hyperlink{\thesection.\theexercise}{\thesection.\theexercise.\thesolution. \ #1}]}{\end{solution*}}
+
+%Linked environments
+
+\NewEnviron{linkedhint}[1][]{%
+\refstepcounter{hint}%
+\immediate\write\hints{\unexpanded{\begin{hint*}}}%
+\immediate\write\hints{[\unexpanded{\hypertarget}{hint:\thesection.\theexercise.\thehint}{}\unexpanded{\hyperlink}{exe:\thesection.\theexercise}{\thesection.\theexercise.\thehint. \ #1}]}%
+\immediate\write\hints{\unexpanded\expandafter{\BODY}}%
+\immediate\write\hints{\unexpanded{\end{hint*}}}%
+\immediate\write\hints{}%
+\makebox[0.15\textwidth][l]{\textcolor{ProofPurple}{\scriptsize{\hyperlink{hint:\thesection.\theexercise.\thehint}{\hintterm~\thehint}}}} 
+}
+
+
+\NewEnviron{linkedsolution}[1][]{%
+\refstepcounter{solution}%
+\immediate\write\solutions{\unexpanded{\begin{solution*}}}%
+\immediate\write\solutions{[\unexpanded{\hypertarget}{sol:\thesection.\theexercise.\thesolution}{}\unexpanded{\hyperlink}{exe:\thesection.\theexercise}{\thesection.\theexercise.\thesolution. \ #1}]}%
+\immediate\write\solutions{\unexpanded\expandafter{\BODY}}%
+\immediate\write\solutions{\unexpanded{\end{solution*}}}%
+\immediate\write\solutions{}%
+\makebox[0.15\textwidth][l]{\textcolor{ProofPurple}{\scriptsize{\hyperlink{sol:\thesection.\theexercise.\thesolution}{\solutionterm~\thesolution}}}}
+}
+
+
+\NewEnviron{linkedproof}[1][]{%
+\refstepcounter{proof}%
+\immediate\write\proofs{\unexpanded{\begin{proofbase}}}%
+\immediate\write\proofs{[\unexpanded{\hypertarget}{proof:\thesection.\thetheorem.\theproof}{}\unexpanded{\hyperlink}{theorem:\thesection.\thetheorem}{\thesection.\thetheorem.\theproof \ #1}]{\proofterm}}%
+\immediate\write\proofs{\unexpanded\expandafter{\BODY}}%
+\immediate\write\proofs{\unexpanded{\end{proofbase}}}%
+\immediate\write\proofs{}%
+\makebox[0.15\textwidth][l]{\textcolor{ProofPurple}{\scriptsize{\hyperlink{proof:\thesection.\thetheorem.\theproof}{\proofterm~\theproof}}}}
+}
+
+%Put exercises neatly
+\newenvironment{exerciseseries}[1][]
+{
+\medskip
+
+\raggedright
+\noindent\textcolor{ExerciseName}{\textbf{\large\exercisepluralterm \ #1}}
+\addcontentsline{toc}{subsection}{\exercisepluralterm \ #1}
+\exercisedivider
+}
+{
+\exercisedivider
+}
+
+\def\printhints{%
+        \immediate\closeout\hints
+        \immediate\openout\hints
+        \input{\jobname.hints.tex}
+}
+
+\def\printsols{%
+        \immediate\closeout\solutions
+        \immediate\openout\solutions
+        \input{\jobname.sols.tex}
+}
+
+\def\printproofs{%
+	\immediate\closeout\proofs
+	\immediate\openout\proofs
+	\input{\jobname.proofs.tex}
+}
+
+\newcommand\addandrun[1]{
+        #1
+        \immediate\write\hints{}
+        \immediate\write\hints{\unexpanded{#1}}
+        \immediate\write\hints{}
+        \immediate\write\solutions{}
+        \immediate\write\solutions{\unexpanded{#1}}
+        \immediate\write\solutions{}
+        \immediate\write\proofs{}
+        \immediate\write\proofs{\unexpanded{#1}}
+        \immediate\write\proofs{}
+}
+
+
