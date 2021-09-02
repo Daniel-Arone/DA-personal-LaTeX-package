@@ -117,14 +117,13 @@
 %Proof environment
 \newenvironment{proofbase}[2][]
 {
-\bigskip
-\begin{center}
+\medskip
+
+\textbf{\textcolor{ProofPurple}{#2 \ #1}}
 \begin{tikzpicture}
-\draw[ProofPurple](-0.02\textwidth,0.45) node[anchor=west] {\textbf{\textcolor{ProofPurple}{\large{#2 \ #1}}}};
 \draw[ProofPurple](0,0) arc (90:120:0.045\textwidth);
 \draw[ProofPurple](0,0) -- (0.95\textwidth,0) arc (90:60:0.045\textwidth);
 \end{tikzpicture}
-\end{center}
 }
 {
 \qed
