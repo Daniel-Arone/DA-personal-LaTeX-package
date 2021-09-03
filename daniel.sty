@@ -119,7 +119,7 @@
 {
 \medskip
 
-\textbf{\textcolor{ProofPurple}{#2 \ #1}}
+\textbf{\textcolor{ProofPurple}{#2\ #1}}
 \begin{tikzpicture}
 \draw[ProofPurple](0,0) arc (90:120:0.045\textwidth);
 \draw[ProofPurple](0,0) -- (0.95\textwidth,0) arc (90:60:0.045\textwidth);
@@ -239,7 +239,7 @@
 
 \newenvironment{hint}[1][]{\refstepcounter{hint}\begin{hint*}[\hypertarget{hint:\thesection.\theexercise.\thehint}{}\hyperlink{exe:\thesection.\theexercise}{\thesection.\theexercise.\thehint. \ #1}]}{\end{hint*}}
 
-\newenvironment{solution}[1][]{\refstepcounter{solution}\begin{solution*}[\hypertarget{solution:\thesection.\theexercise.\thesolution}{}\hyperlink{exe:\thesection.\theexercise}{\thesection.\theexercise.\thesolution. \ #1}]}{\end{solution*}}
+\newenvironment{solution}[1][]{\refstepcounter{solution}\begin{solution*}[\hyperlink{exe:\thesection.\theexercise}{\thesection.\theexercise.\thesolution.\ #1}]}{\end{solution*}}
 
 %Linked environments
 
