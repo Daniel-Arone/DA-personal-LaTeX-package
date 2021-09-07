@@ -22,6 +22,8 @@
 \definecolor{LemmaBg}{RGB}{192,192,255}
 \definecolor{DefinitionBorder}{RGB}{104,5,54}
 \definecolor{DefinitionBg}{RGB}{205,175,255}
+\definecolor{ExampleBorder}{RGB}{0,0,0}
+\definecolor{ExampleBg}{RGB}{255,255,255}
 \definecolor{ExerciseName}{RGB}{0,0,140}
 
 %Word variables for multiple languages
@@ -36,6 +38,7 @@
 \newcommand{\hintterm}{Hint}
 \newcommand{\solutionterm}{Solution}
 \newcommand{\sourceterm}{Source}
+\newcommand{\exampleterm}{Example}
 
 %Logic macros
 \newif\ifdaniel@linked
@@ -56,6 +59,7 @@
         \renewcommand{\hintterm}{Vinkki}
         \renewcommand{\solutionterm}{Ratkaisu}
         \renewcommand{\sourceterm}{Lähde}
+	\renewcommand{\exampleterm}{Esimerkki}
         }
 
 %Unlinked option
@@ -206,6 +210,10 @@
 
 \newenvironment{definition}[1][]{
 \begin{theorembase}[#1]{\definitionterm}{DefinitionBg}{DefinitionBorder}}{
+\end{theorembase}}
+
+\newenvironment{example}[1][]{
+\begin{theorembase}[#1]{\exampleterm}{ExampleBg}{ExampleBorder}}{
 \end{theorembase}}
 
 %Exercise environment
