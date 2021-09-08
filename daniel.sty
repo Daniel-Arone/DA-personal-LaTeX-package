@@ -123,11 +123,17 @@
 {
 \medskip
 
-\textbf{\textcolor{ProofPurple}{#2\ #1}}
+%\begin{center}
+%\noindent\textbf{\textcolor{ProofPurple}{#2\ #1}}
+%\begin{center}
+\noindent
 \begin{tikzpicture}
+\node[anchor=south west,inner xsep=0pt, outer xsep=0pt] at (-0.025\textwidth,0) {\textbf{\textcolor{ProofPurple}{#2\ #1}}};
 \draw[ProofPurple](0,0) arc (90:120:0.045\textwidth);
 \draw[ProofPurple](0,0) -- (0.95\textwidth,0) arc (90:60:0.045\textwidth);
 \end{tikzpicture}
+%\end{center}
+
 }
 {
 \qed
@@ -224,8 +230,7 @@
 \noindent
 \textcolor{ExerciseName}{\textbf{\hypertarget{exe:\thesection.\theexercise}{\exerciseterm\ \thesection.\theexercise.}}}
 \ifx&#1&%
-\else\textcolor{ExerciseName}{\textbf{\ #1}}\fi
-\ignorespaces
+\else\textcolor{ExerciseName}{\textbf{#1}} \fi
 }
 {
 \linebreak[0]
@@ -235,8 +240,12 @@
 %Hint environment
 \newenvironment{hint*}[1][]
 {
-\begin{center}\begin{tikzpicture}\draw[ProofPurple,dotted,thick](0,0)--(\textwidth-0.8pt,0);\end{tikzpicture}\end{center}
-\textbf{\textcolor{ProofPurple}{\hintterm \ #1:}}
+\begin{center}
+\begin{tikzpicture}
+\draw[ProofPurple,dotted,thick](0,0)--(\textwidth-0.8pt,0);
+\node[inner xsep=0, outer xsep=0, anchor=south west] at (-0.4pt,0) {\textbf{\textcolor{ProofPurple}{\hintterm\ #1}}};
+\end{tikzpicture}
+\end{center}
 }
 {
 \begin{center}\begin{tikzpicture}\draw[ProofPurple,dotted,thick](0,0)--(\textwidth-0.8pt,0);\end{tikzpicture}\end{center}
