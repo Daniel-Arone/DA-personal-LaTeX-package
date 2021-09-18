@@ -10,6 +10,22 @@
 \RequirePackage{hyperref}
 \RequirePackage{amsthm}
 
+%Counters
+\newcounter{daniel@theorem}[section]
+\newcounter{daniel@proof}[daniel@theorem]
+\newcounter{daniel@exercise}[section]
+\newcounter{daniel@solution}[daniel@exercise]
+\newcounter{daniel@hint}[daniel@exercise]
+
+%Environment labels
+\newcommand{\theoremlabel}{Theorem~\thesection.\thedaniel@theorem}
+\newcommand{\corollarylabel}{Corollary~\thesection.\thedaniel@theorem}
+\newcommand{\lemmalabel}{Lemma~\thesection.\thedaniel@theorem}
+\newcommand{\definitionlabel}{Definition~\thesection.\thedaniel@theorem}
+\newcommand{\examplelabel}{Example~\thesection.\thedaniel@theorem}
+\newcommand{\prooflabel}{Proof}
+\newcommand{\exerciseserieslabel}{Exercises}
+
 %Colors
 \definecolor{ProofPurple}{RGB}{99,0,99}
 \definecolor{RemarkBorder}{RGB}{0,0,0}
@@ -27,18 +43,11 @@
 \definecolor{ExerciseName}{RGB}{0,0,140}
 
 %Word variables for multiple languages
-\newcommand{\theoremterm}{Theorem}
-\newcommand{\lemmaterm}{Lemma}
-\newcommand{\corollaryterm}{Corollary}
-\newcommand{\proofterm}{Proof}
-\newcommand{\definitionterm}{Definition}
 \newcommand{\remarkterm}{Remark}
 \newcommand{\exerciseterm}{Exercise}
-\newcommand{\exercisepluralterm}{Exercises}
 \newcommand{\hintterm}{Hint}
 \newcommand{\solutionterm}{Solution}
 \newcommand{\sourceterm}{Source}
-\newcommand{\exampleterm}{Example}
 
 %Logic macros
 \newif\ifdaniel@linked
@@ -49,17 +58,17 @@
 %Language options
 \DeclareOption{fin}
         {
-        \renewcommand{\theoremterm}{Lause}
-        \renewcommand{\corollaryterm}{Korollaari}
-        \renewcommand{\proofterm}{Todistus}
-        \renewcommand{\definitionterm}{Määritelmä}
+	\renewcommand{\theoremlabel}{Lause~\thesection.\thedaniel@theorem}
+	\renewcommand{\corollarylabel}{Korollaari~\thesection.\thedaniel@theorem}
+	\renewcommand{\definitionlabel}{Määritelmä~\thesection.\thedaniel@theorem}
+	\renewcommand{\examplelabel}{Esimerkki~\thesection.\thedaniel@theorem}
+        \renewcommand{\prooflabel}{Todistus}
         \renewcommand{\remarkterm}{Huomautus}
         \renewcommand{\exerciseterm}{Tehtävä}
-	\renewcommand{\exercisepluralterm}{Tehtävät}
+	\renewcommand{\exerciseserieslabel}{Tehtävät}
         \renewcommand{\hintterm}{Vinkki}
         \renewcommand{\solutionterm}{Ratkaisu}
         \renewcommand{\sourceterm}{Lähde}
-	\renewcommand{\exampleterm}{Esimerkki}
         }
 
 %Unlinked option
@@ -67,13 +76,6 @@
 
 \DeclareOption*{\PackageWarning{daniel}{Unknown '\CurrentOption'}}
 \ProcessOptions\relax
-
-%Counters
-\newcounter{theorem}[section]
-\newcounter{proof}[theorem]
-\newcounter{exercise}[section]
-\newcounter{solution}[exercise]
-\newcounter{hint}[exercise]
 
 %Basic shortcuts
 \def\mbb#1{\mathbb{#1}}
@@ -101,51 +103,48 @@
 \ifdaniel@linked
 %When beginning document
 \AtBeginDocument{
-\newwrite\hints
-\immediate\openout\hints=\jobname.hints.tex
-\newwrite\solutions
-\immediate\openout\solutions=\jobname.sols.tex
-\newwrite\proofs
-\immediate\openout\proofs=\jobname.proofs.tex
+	\newwrite\hints
+	\immediate\openout\hints=\jobname.hints.tex
+	\newwrite\solutions
+	\immediate\openout\solutions=\jobname.sols.tex
+	\newwrite\proofs
+	\immediate\openout\proofs=\jobname.proofs.tex
 }
 
 %When ending document
 \AtEndDocument{
-\immediate\closeout\hints
-\immediate\closeout\solutions
-\immediate\closeout\solutions
+	\immediate\closeout\hints
+	\immediate\closeout\solutions
+	\immediate\closeout\proofs
 }
 \fi
+
 %Environments
 
 %Proof environment
 \newenvironment{proofbase}[2][]
 {
-\medskip
+	\medskip
 
-%\begin{center}
-%\noindent\textbf{\textcolor{ProofPurple}{#2\ #1}}
-%\begin{center}
-\noindent
-\begin{tikzpicture}
-\node[anchor=south west,inner xsep=0pt, outer xsep=0pt] at (-0.025\textwidth,0) {\textbf{\textcolor{ProofPurple}{#2\ #1}}};
-\draw[ProofPurple](0,0) arc (90:120:0.045\textwidth);
-\draw[ProofPurple](0,0) -- (0.95\textwidth,0) arc (90:60:0.045\textwidth);
-\end{tikzpicture}
-%\end{center}
+	\noindent
+	\begin{tikzpicture}
+	\node[anchor=south west,inner xsep=0pt, outer xsep=0pt] at (-0.025\textwidth,0) {\textbf{\textcolor{ProofPurple}{#2\ #1}}};
+	\draw[ProofPurple](0,0) arc (90:120:0.045\textwidth);
+	\draw[ProofPurple](0,0) -- (0.95\textwidth,0) arc (90:60:0.045\textwidth);
+	\end{tikzpicture}
 
 }
 {
-\qed
-\begin{center}
-\begin{tikzpicture}
-\draw[ProofPurple] (0,0) -- (0.95\textwidth,0) arc (270:300:0.045\textwidth);
-\draw[ProofPurple] (0,0) arc (270:240:0.045\textwidth);
-\end{tikzpicture}
-\end{center}
+	\qed
+	\begin{center}
+	\begin{tikzpicture}
+	\draw[ProofPurple] (0,0) -- (0.95\textwidth,0) arc (270:300:0.045\textwidth);
+	\draw[ProofPurple] (0,0) arc (270:240:0.045\textwidth);
+	\end{tikzpicture}
+	\end{center}
 }
 
-\renewenvironment{proof}[1][]{\begin{proofbase}[#1]{\proofterm.}}{\end{proofbase}}
+\renewenvironment{proof}[1][]{\begin{proofbase}[#1]{\prooflabel.}}{\end{proofbase}}
 
 %Regular remark
 \newenvironment{remark}
@@ -180,15 +179,15 @@
 }
 
 %Template for theorem-style environments
-\newenvironment{theorembase}[4][]{%
-\ifx&#1&\else\index{#1}\fi
-\refstepcounter{theorem}
-\hypertarget{theorem:\thesection.\thetheorem}{}
+\newenvironment{theorembase}[3][]{%
+%\ifx&#1&\else\index{#1}\fi
+\refstepcounter{daniel@theorem}
+\hypertarget{theorem:\thesection.\thedaniel@theorem}{}
 \begin{center}
 \begin{tikzpicture}
-\node[fill=#3, rectangle, inner sep=10pt, ultra thick, draw=#4, rounded corners] (box) \bgroup
+\node[fill=#2, rectangle, inner sep=10pt, ultra thick, draw=#3, rounded corners] (box) \bgroup
 \begin{minipage}{0.75\textwidth}
-\textbf{#2 \thesection.\thetheorem. \  #1}
+\textbf{#1}
 
 \medskip}{%
 \end{minipage}
@@ -199,36 +198,36 @@
 %Some basic ones I'll use
 \newenvironment{theorem}[1][]
 {
-\begin{theorembase}[#1]{\theoremterm}{TheoremBg}{TheoremBorder}
-\addcontentsline{toc}{subsection}{\theoremterm \ \thesection.\thetheorem. \ #1}
+\begin{theorembase}[\theoremlabel \ #1]{TheoremBg}{TheoremBorder}
+\addcontentsline{toc}{subsection}{\theoremlabel \ #1}
 }
 {
 \end{theorembase}
 }
 
 \newenvironment{corollary}[1][]{
-\begin{theorembase}[#1]{\corollaryterm}{CorollaryBg}{CorollaryBorder}}{
+\begin{theorembase}[\corollarylabel \ #1]{CorollaryBg}{CorollaryBorder}}{
 \end{theorembase}}
 
 \newenvironment{lemma}[1][]{
-\begin{theorembase}[#1]{\lemmaterm}{LemmaBg}{LemmaBorder}}{
+\begin{theorembase}[\lemmalabel \ #1]{LemmaBg}{LemmaBorder}}{
 \end{theorembase}}
 
 \newenvironment{definition}[1][]{
-\begin{theorembase}[#1]{\definitionterm}{DefinitionBg}{DefinitionBorder}}{
+\begin{theorembase}[\definitionlabel \ #1]{DefinitionBg}{DefinitionBorder}}{
 \end{theorembase}}
 
 \newenvironment{example}[1][]{
-\begin{theorembase}[#1]{\exampleterm}{ExampleBg}{ExampleBorder}}{
+\begin{theorembase}[\examplelabel \ #1]{ExampleBg}{ExampleBorder}}{
 \end{theorembase}}
 
 %Exercise environment
 \newenvironment{exercise}[1][]{
-\refstepcounter{exercise}
+\refstepcounter{daniel@exercise}
 \medskip
 
 \noindent
-\textcolor{ExerciseName}{\textbf{\hypertarget{exe:\thesection.\theexercise}{\exerciseterm\ \thesection.\theexercise.}}}
+\textcolor{ExerciseName}{\textbf{\hypertarget{exe:\thesection.\thedaniel@exercise}{\exerciseterm\ \thesection.\thedaniel@exercise.}}}
 \ifx&#1&%
 \else\textcolor{ExerciseName}{\textbf{#1}} \fi
 }
@@ -254,57 +253,59 @@
 \newenvironment{solution*}[1][]{
 \begin{proofbase}[#1]{\solutionterm}}{\end{proofbase}}
 
-\newenvironment{hint}[1][]{\refstepcounter{hint}\begin{hint*}[\hypertarget{hint:\thesection.\theexercise.\thehint}{}\hyperlink{exe:\thesection.\theexercise}{\thesection.\theexercise.\thehint. \ #1}]}{\end{hint*}}
+\newenvironment{hint}[1][]{\refstepcounter{daniel@hint}\begin{hint*}[\hypertarget{hint:\thesection.\thedaniel@exercise.\thedaniel@hint}{}\hyperlink{exe:\thesection.\thedaniel@exercise}{\thesection.\thedaniel@exercise.\thedaniel@hint. \ #1}]}{\end{hint*}}
 
-\newenvironment{solution}[1][]{\refstepcounter{solution}\begin{solution*}[\hyperlink{exe:\thesection.\theexercise}{\thesection.\theexercise.\thesolution.\ #1}]}{\end{solution*}}
+\newenvironment{solution}[1][]{\refstepcounter{daniel@solution}\begin{solution*}[\hyperlink{exe:\thesection.\thedaniel@exercise}{\thesection.\thedaniel@exercise.\thedaniel@solution.\ #1}]}{\end{solution*}}
 
 %Linked environments
 
 \NewEnviron{linkedhint}[1][]{%
-\refstepcounter{hint}%
+\refstepcounter{daniel@hint}%
 \immediate\write\hints{\unexpanded{\begin{hint*}}}%
-\immediate\write\hints{[\unexpanded{\hypertarget}{hint:\thesection.\theexercise.\thehint}{}\unexpanded{\hyperlink}{exe:\thesection.\theexercise}{\thesection.\theexercise.\thehint. \ #1}]}%
+\immediate\write\hints{[\unexpanded{\hypertarget}{hint:\thesection.\thedaniel@exercise.\thedaniel@hint}{}\unexpanded{\hyperlink}{exe:\thesection.\thedaniel@exercise}{\thesection.\thedaniel@exercise.\thedaniel@hint. \ #1}]}%
 \immediate\write\hints{\unexpanded\expandafter{\BODY}}%
 \immediate\write\hints{\unexpanded{\end{hint*}}}%
 \immediate\write\hints{}%
-\makebox[0.15\textwidth][l]{\textcolor{ProofPurple}{\scriptsize{\hyperlink{hint:\thesection.\theexercise.\thehint}{\hintterm~\thehint}}}} 
+\makebox[0.15\textwidth][l]{\textcolor{ProofPurple}{\scriptsize{\hyperlink{hint:\thesection.\thedaniel@exercise.\thedaniel@hint}{\hintterm~\thedaniel@hint}}}} 
 }
 
 
 \NewEnviron{linkedsolution}[1][]{%
-\refstepcounter{solution}%
+\refstepcounter{daniel@solution}%
 \immediate\write\solutions{\unexpanded{\begin{solution*}}}%
-\immediate\write\solutions{[\unexpanded{\hypertarget}{sol:\thesection.\theexercise.\thesolution}{}\unexpanded{\hyperlink}{exe:\thesection.\theexercise}{\thesection.\theexercise.\thesolution. \ #1}]}%
+\immediate\write\solutions{[\unexpanded{\hypertarget}{sol:\thesection.\thedaniel@exercise.\thedaniel@solution}{}\unexpanded{\hyperlink}{exe:\thesection.\thedaniel@exercise}{\thesection.\thedaniel@exercise.\thedaniel@solution. \ #1}]}%
 \immediate\write\solutions{\unexpanded\expandafter{\BODY}}%
 \immediate\write\solutions{\unexpanded{\end{solution*}}}%
 \immediate\write\solutions{}%
-\makebox[0.15\textwidth][l]{\textcolor{ProofPurple}{\scriptsize{\hyperlink{sol:\thesection.\theexercise.\thesolution}{\solutionterm~\thesolution}}}}
+\makebox[0.15\textwidth][l]{\textcolor{ProofPurple}{\scriptsize{\hyperlink{sol:\thesection.\thedaniel@exercise.\thedaniel@solution}{\solutionterm~\thedaniel@solution}}}}
 }
 
 
 \NewEnviron{linkedproof}[1][]{%
-\refstepcounter{proof}%
+\refstepcounter{daniel@proof}%
 \immediate\write\proofs{\unexpanded{\begin{proofbase}}}%
-\immediate\write\proofs{[\unexpanded{\hypertarget}{proof:\thesection.\thetheorem.\theproof}{}\unexpanded{\hyperlink}{theorem:\thesection.\thetheorem}{\thesection.\thetheorem.\theproof \ #1}]{\proofterm}}%
+\immediate\write\proofs{[\unexpanded{\hypertarget}{proof:\thesection.\thedaniel@theorem.\thedaniel@proof}{}\unexpanded{\hyperlink}{theorem:\thesection.\thedaniel@theorem}{\thesection.\thedaniel@theorem.\thedaniel@proof \ #1}]{\prooflabel}}%
 \immediate\write\proofs{\unexpanded\expandafter{\BODY}}%
 \immediate\write\proofs{\unexpanded{\end{proofbase}}}%
 \immediate\write\proofs{}%
-\makebox[0.15\textwidth][l]{\textcolor{ProofPurple}{\scriptsize{\hyperlink{proof:\thesection.\thetheorem.\theproof}{\proofterm~\theproof}}}}
+\makebox[0.15\textwidth][l]{\textcolor{ProofPurple}{\scriptsize{\hyperlink{proof:\thesection.\thedaniel@theorem.\thedaniel@proof}{\prooflabel~\thedaniel@proof}}}}
 }
 
 %Put exercises neatly
-\newenvironment{exerciseseries}[1][]
+\newenvironment{exerciseseries*}[1][]
 {
 \medskip
 
 \raggedright
-\noindent\textcolor{ExerciseName}{\textbf{\large\exercisepluralterm \ #1}}
-\addcontentsline{toc}{subsection}{\exercisepluralterm \ #1}
+\noindent\textcolor{ExerciseName}{\textbf{\large #1}}
+\addcontentsline{toc}{subsection}{#1}
 \exercisedivider
 }
 {
 \exercisedivider
 }
+
+\newenvironment{exerciseseries}[1][]{\begin{exerciseseries*}{\exerciseserieslabel \ #1}}{\end{exerciseseries*}}
 
 \def\printhints{%
         \immediate\closeout\hints
