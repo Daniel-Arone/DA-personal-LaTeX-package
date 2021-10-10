@@ -296,7 +296,7 @@
 {
 \medskip
 
-\raggedright
+%\raggedright
 \noindent\textcolor{ExerciseName}{\textbf{\large #1}}
 \addcontentsline{toc}{subsection}{#1}
 \exercisedivider
@@ -305,7 +305,7 @@
 \exercisedivider
 }
 
-\newenvironment{exerciseseries}[1][]{\begin{exerciseseries*}{\exerciseserieslabel \ #1}}{\end{exerciseseries*}}
+\newenvironment{exerciseseries}[1][]{\begin{exerciseseries*}[\exerciseserieslabel \ #1]}{\end{exerciseseries*}}
 
 \def\printhints{%
         \immediate\closeout\hints
