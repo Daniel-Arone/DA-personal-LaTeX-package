@@ -18,11 +18,11 @@
 \newcounter{daniel@hint}[daniel@exercise]
 
 %Environment labels
-\newcommand{\theoremlabel}{Theorem~\thesection.\thedaniel@theorem}
-\newcommand{\corollarylabel}{Corollary~\thesection.\thedaniel@theorem}
-\newcommand{\lemmalabel}{Lemma~\thesection.\thedaniel@theorem}
-\newcommand{\definitionlabel}{Definition~\thesection.\thedaniel@theorem}
-\newcommand{\examplelabel}{Example~\thesection.\thedaniel@theorem}
+\newcommand{\theoremlabel}{Theorem~\thesection.\thedaniel@theorem.}
+\newcommand{\corollarylabel}{Corollary~\thesection.\thedaniel@theorem.}
+\newcommand{\lemmalabel}{Lemma~\thesection.\thedaniel@theorem.}
+\newcommand{\definitionlabel}{Definition~\thesection.\thedaniel@theorem.}
+\newcommand{\examplelabel}{Example~\thesection.\thedaniel@theorem.}
 \newcommand{\prooflabel}{Proof}
 \newcommand{\exerciseserieslabel}{Exercises}
 
@@ -122,13 +122,13 @@
 %Environments
 
 %Proof environment
-\newenvironment{proofbase}[2][]
+\newenvironment{proof*}[1][]
 {
 	\medskip
 
 	\noindent
 	\begin{tikzpicture}
-	\node[anchor=south west,inner xsep=0pt, outer xsep=0pt] at (-0.025\textwidth,0) {\textbf{\textcolor{ProofPurple}{#2\ #1}}};
+	\node[anchor=south west,inner xsep=0pt, outer xsep=0pt] at (-0.025\textwidth,0) {\textbf{\textcolor{ProofPurple}{#1}}};
 	\draw[ProofPurple](0,0) arc (90:120:0.045\textwidth);
 	\draw[ProofPurple](0,0) -- (0.95\textwidth,0) arc (90:60:0.045\textwidth);
 	\end{tikzpicture}
@@ -136,15 +136,13 @@
 }
 {
 	\qed
-	\begin{center}
 	\begin{tikzpicture}
 	\draw[ProofPurple] (0,0) -- (0.95\textwidth,0) arc (270:300:0.045\textwidth);
 	\draw[ProofPurple] (0,0) arc (270:240:0.045\textwidth);
 	\end{tikzpicture}
-	\end{center}
 }
 
-\renewenvironment{proof}[1][]{\begin{proofbase}[#1]{\prooflabel.}}{\end{proofbase}}
+\renewenvironment{proof}[1][]{\begin{proof*}[\prooflabel\ #1]}{\end{proof*}}
 
 %Regular remark
 \newenvironment{remark}
@@ -179,7 +177,7 @@
 }
 
 %Template for theorem-style environments
-\newenvironment{theorembase}[3][]{%
+\newenvironment{theorem*}[3][]{%
 %\ifx&#1&\else\index{#1}\fi
 \refstepcounter{daniel@theorem}
 \hypertarget{theorem:\thesection.\thedaniel@theorem}{}
@@ -198,28 +196,28 @@
 %Some basic ones I'll use
 \newenvironment{theorem}[1][]
 {
-\begin{theorembase}[\theoremlabel \ #1]{TheoremBg}{TheoremBorder}
+\begin{theorem*}[\theoremlabel \ #1]{TheoremBg}{TheoremBorder}
 \addcontentsline{toc}{subsection}{\theoremlabel \ #1}
 }
 {
-\end{theorembase}
+\end{theorem*}
 }
 
 \newenvironment{corollary}[1][]{
-\begin{theorembase}[\corollarylabel \ #1]{CorollaryBg}{CorollaryBorder}}{
-\end{theorembase}}
+\begin{theorem*}[\corollarylabel \ #1]{CorollaryBg}{CorollaryBorder}}{
+\end{theorem*}}
 
 \newenvironment{lemma}[1][]{
-\begin{theorembase}[\lemmalabel \ #1]{LemmaBg}{LemmaBorder}}{
-\end{theorembase}}
+\begin{theorem*}[\lemmalabel \ #1]{LemmaBg}{LemmaBorder}}{
+\end{theorem*}}
 
 \newenvironment{definition}[1][]{
-\begin{theorembase}[\definitionlabel \ #1]{DefinitionBg}{DefinitionBorder}}{
-\end{theorembase}}
+\begin{theorem*}[\definitionlabel \ #1]{DefinitionBg}{DefinitionBorder}}{
+\end{theorem*}}
 
 \newenvironment{example}[1][]{
-\begin{theorembase}[\examplelabel \ #1]{ExampleBg}{ExampleBorder}}{
-\end{theorembase}}
+\begin{theorem*}[\examplelabel \ #1]{ExampleBg}{ExampleBorder}}{
+\end{theorem*}}
 
 %Exercise environment
 \newenvironment{exercise}[1][]{
@@ -251,7 +249,7 @@
 }
 
 \newenvironment{solution*}[1][]{
-\begin{proofbase}[#1]{\solutionterm}}{\end{proofbase}}
+\begin{proof*}[#1]{\solutionterm}}{\end{proof*}}
 
 \newenvironment{hint}[1][]{\refstepcounter{daniel@hint}\begin{hint*}[\hypertarget{hint:\thesection.\thedaniel@exercise.\thedaniel@hint}{}\hyperlink{exe:\thesection.\thedaniel@exercise}{\thesection.\thedaniel@exercise.\thedaniel@hint. \ #1}]}{\end{hint*}}
 
@@ -283,10 +281,10 @@
 
 \NewEnviron{linkedproof}[1][]{%
 \refstepcounter{daniel@proof}%
-\immediate\write\proofs{\unexpanded{\begin{proofbase}}}%
+\immediate\write\proofs{\unexpanded{\begin{proof*}}}%
 \immediate\write\proofs{[\unexpanded{\hypertarget}{proof:\thesection.\thedaniel@theorem.\thedaniel@proof}{}\unexpanded{\hyperlink}{theorem:\thesection.\thedaniel@theorem}{\thesection.\thedaniel@theorem.\thedaniel@proof \ #1}]{\prooflabel}}%
 \immediate\write\proofs{\unexpanded\expandafter{\BODY}}%
-\immediate\write\proofs{\unexpanded{\end{proofbase}}}%
+\immediate\write\proofs{\unexpanded{\end{proof*}}}%
 \immediate\write\proofs{}%
 \makebox[0.15\textwidth][l]{\textcolor{ProofPurple}{\scriptsize{\hyperlink{proof:\thesection.\thedaniel@theorem.\thedaniel@proof}{\prooflabel~\thedaniel@proof}}}}
 }
