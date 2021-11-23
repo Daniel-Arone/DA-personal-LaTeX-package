@@ -121,23 +121,27 @@
 \newenvironment{proof*}[1][]
 {
 	\medskip
+	
+	{
+	\centering
 
-	\noindent
 	\begin{tikzpicture}
 	\node[anchor=south west,inner xsep=0pt, outer xsep=0pt] at (-0.025\textwidth,0) {\textbf{\textcolor{ProofPurple}{#1}}};
 	\draw[ProofPurple](0,0) arc (90:120:0.045\textwidth);
-	\draw[ProofPurple](0,0) -- (0.95\textwidth,0) arc (90:60:0.045\textwidth);
+	\draw[ProofPurple](0,0) -- (0.952\textwidth,0) arc (90:60:0.045\textwidth);
 	\end{tikzpicture}
-
+	\par}
 }
 {
 	\daniel@qed
-	\linebreak
-	\noindent
+	{
+	\centering
+
 	\begin{tikzpicture}
-	\draw[ProofPurple] (0,0) -- (0.95\textwidth,0) arc (270:300:0.045\textwidth);
-	\draw[ProofPurple] (0,0) arc (270:240:0.045\textwidth);
+		\draw[ProofPurple](0,0) arc (270:240:0.045\textwidth);
+		\draw[ProofPurple](0,0) -- (0.952\textwidth,0) arc (270:300:0.045\textwidth);
 	\end{tikzpicture}
+	\par}
 }
 
 \renewenvironment{proof}[1][]{\begin{proof*}[\prooflabel\ #1]}{\end{proof*}}
