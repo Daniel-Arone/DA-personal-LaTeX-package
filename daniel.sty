@@ -49,9 +49,8 @@
 \newcommand{\solutionterm}{Solution}
 \newcommand{\sourceterm}{Source}
 
-%Logic macros
-\newif\ifdaniel@linked
-\daniel@linkedtrue
+%QED Symbol Jank
+\newcommand{\daniel@qed}{}
 
 %Package options
 
@@ -71,8 +70,23 @@
         \renewcommand{\sourceterm}{Lähde}
         }
 
-%Unlinked option
-\DeclareOption{unlinked}{\daniel@linkedfalse}
+%Linked option
+\DeclareOption{linked}{
+	\AtBeginDocument{
+		\newwrite\hints
+		\immediate\openout\hints=\jobname.hints.tex
+		\newwrite\solutions
+		\immediate\openout\solutions=\jobname.sols.tex
+		\newwrite\proofs
+		\immediate\openout\proofs=\jobname.proofs.tex
+	}
+	\AtEndDocument{
+		\immediate\closeout\hints
+		\immediate\closeout\solutions
+		\immediate\closeout\proofs
+	}
+}
+\DeclareOption{qed}{\renewcommand{\daniel@qed}{\qed}}
 
 \DeclareOption*{\PackageWarning{daniel}{Unknown '\CurrentOption'}}
 \ProcessOptions\relax
@@ -102,25 +116,6 @@
 \newcommand{\abs}[1]{\left|#1\right|}
 \newcommand{\exercisedivider}{\begin{center}\begin{tikzpicture}\draw[thick, ExerciseName, arrows=|-|](0,0)--(\textwidth-0.8pt,0);\end{tikzpicture}\end{center}}
 
-\ifdaniel@linked
-%When beginning document
-\AtBeginDocument{
-	\newwrite\hints
-	\immediate\openout\hints=\jobname.hints.tex
-	\newwrite\solutions
-	\immediate\openout\solutions=\jobname.sols.tex
-	\newwrite\proofs
-	\immediate\openout\proofs=\jobname.proofs.tex
-}
-
-%When ending document
-\AtEndDocument{
-	\immediate\closeout\hints
-	\immediate\closeout\solutions
-	\immediate\closeout\proofs
-}
-\fi
-
 %Environments
 
 %Proof environment
@@ -137,13 +132,13 @@
 
 }
 {
-	\qed
-	\begin{center}
+	\daniel@qed
+	\linebreak
+	\noindent
 	\begin{tikzpicture}
 	\draw[ProofPurple] (0,0) -- (0.95\textwidth,0) arc (270:300:0.045\textwidth);
 	\draw[ProofPurple] (0,0) arc (270:240:0.045\textwidth);
 	\end{tikzpicture}
-	\end{center}
 }
 
 \renewenvironment{proof}[1][]{\begin{proof*}[\prooflabel\ #1]}{\end{proof*}}
@@ -219,6 +214,8 @@
 \begin{theorem*}[\definitionlabel \ #1]{DefinitionBg}{DefinitionBorder}}{
 \end{theorem*}}
 
+%TODO:Example not box
+
 \newenvironment{example}[1][]{
 \begin{theorem*}[\examplelabel \ #1]{ExampleBg}{ExampleBorder}}{
 \end{theorem*}}
@@ -237,6 +234,8 @@
 \linebreak[0]
 \ignorespacesafterend
 }
+
+%TODO:Yassify hint
 
 %Hint environment
 \newenvironment{hint*}[1][]
