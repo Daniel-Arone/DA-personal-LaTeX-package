@@ -13,7 +13,7 @@
 %\addbibresource{sources.bib}
 
 %Own .sty file stuff
-\usepackage{daniel}
+\usepackage[linked]{daniel}
 %\usepackage{tikz}
 %\usepackage{xcolor}
 
@@ -61,27 +61,27 @@ It's got some macros
 
 \end{verbatim}
 
-\section{Theorembase environments}
-There's a \texttt{theorembase} environment. For example the code
+\section{Theorem* environments}
+There's a \texttt{theorem*} environment. For example the code
 
 \begin{verbatim}
-\begin{theorembase}[name]{classification}{red}{green}
+\begin{theorem*}[name]{red}{green}
 body text
-\end{theorembase}
+\end{theorem*}
 \end{verbatim}
 
 gives you
 
-\begin{theorembase}[name]{classification}{red}{green}
+\begin{theorem*}[name]{red}{green}
 body text
-\end{theorembase}
+\end{theorem*}
 
-All theorembase environments are numbered with the \texttt{theorem} counter.
-There are also the built-in theorembase environments.
+All theorem* environments are numbered with the \texttt{theorem} counter.
+There are also the built-in theorem* environments.
 
 
 They are \texttt{theorem}, \texttt{corollary}, \texttt{lemma}, and \texttt{definition}.
-Their look can be tweaked by redefining \texttt{theorembase}.
+Their look can be tweaked by redefining \texttt{theorem*}.
 
 For example:
 
@@ -118,6 +118,10 @@ lemma text
 \begin{definition}[definition name]
 definition text
 \end{definition}
+
+\begin{example}[example name]
+	example text
+\end{example}
 
 \section{Exercises}
 
