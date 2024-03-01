@@ -1,2 +1,59 @@
 \NeedsTeXFormat{LaTeX2e}
 \ProvidesPackage{danielenv}[Environments for e.g. theorems and proofs]
+
+
+%Colors
+\definecolor{ProofBorder}{RGB}{99,0,99}
+\definecolor{RemarkBorder}{RGB}{0,0,0}
+\definecolor{RemarkBg}{RGB}{210,230,255}
+\definecolor{TheoremBorder}{RGB}{105,5,5}
+\definecolor{TheoremBg}{RGB}{255,192,192}
+\definecolor{CorollaryBorder}{RGB}{5,105,5}
+\definecolor{CorollaryBg}{RGB}{192,255,192}
+\definecolor{LemmaBorder}{RGB}{5,5,105}
+\definecolor{LemmaBg}{RGB}{192,192,255}
+\definecolor{DefinitionBorder}{RGB}{104,5,54}
+\definecolor{DefinitionBg}{RGB}{205,175,255}
+\definecolor{ExampleColor}{RGB}{0,0,0}
+\definecolor{ExerciseName}{RGB}{0,0,140}
+
+
+%Regular remark
+\newenvironment{remark}
+{
+\begin{center}
+\begin{tikzpicture}
+\node[fill=RemarkBg, rectangle, inner sep=10pt, text width=\textwidth-0.1cm-20.4pt,draw=RemarkBg, sharp corners] (box) \bgroup
+\textbf{\remarkterm:}
+}
+{
+\egroup;
+\fill[RemarkBorder, sharp corners] (box.south west) rectangle ([xshift=-0.1cm] box.north west);
+\end{tikzpicture}
+\end{center}
+}
+
+%Template for theorem-style environments
+\newenvironment{theorem*}[3][]{%
+%\ifx&#1&\else\index{#1}\fi
+%\refstepcounter{daniel@theorem}
+%\hypertarget{theorem:\thesection.\thedaniel@theorem}{}
+\begin{center}
+\begin{tikzpicture}
+\node[fill=#2, rectangle, inner sep=10pt, ultra thick, draw=#3, rounded corners] (box) \bgroup
+\begin{minipage}{0.75\textwidth}
+\textbf{#1}
+
+\medskip}{%
+\end{minipage}
+\egroup;
+\end{tikzpicture}
+\end{center}}
+
+\newenvironment{definition*}[1][]
+{
+	\begin{theorem*}[Definition (#1)][DefinitionBg][DefinitionBorder]
+}
+{
+	\end{theorem*}
+}
